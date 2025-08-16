@@ -14,7 +14,6 @@ int main() {
     char buffer[BUFFER_SIZE] = {0};
     char command_input[BUFFER_SIZE];
 
-    // Create socket file descriptor
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("Socket creation error");
         exit(EXIT_FAILURE);
@@ -23,13 +22,11 @@ int main() {
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_port = htons(PORT);
 
-    // Convert IPv4 and IPv6 addresses from text to binary form
     if (inet_pton(AF_INET, SERVER_IP, &serv_addr.sin_addr) <= 0) {
         perror("Invalid address/ Address not supported");
         exit(EXIT_FAILURE);
     }
 
-    // Connect to the server
     if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
         perror("Connection Failed");
         exit(EXIT_FAILURE);
@@ -53,11 +50,9 @@ int main() {
             break;
         }
 
-        // Send command to server
         send(sock, command_input, strlen(command_input), 0);
         printf("Command sent: %s\n", command_input);
 
-        // Read server response
         memset(buffer, 0, BUFFER_SIZE);
         int valread = read(sock, buffer, BUFFER_SIZE);
         if (valread <= 0) {
@@ -70,3 +65,4 @@ int main() {
     close(sock);
     return 0;
 }
+
